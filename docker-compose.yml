@@ -1,0 +1,48 @@
+version: "3.9"
+
+services:
+    # Frontend
+    frontend:
+        container_name: copilot-fe
+        image: copilot-fe
+        build:
+            context: ./frontend
+            dockerfile: dockerfile
+            args:
+                RUN_ENV: local
+
+        ports:
+            - "3005:3005"
+        volumes:
+            - "./frontend/src:/copilot/src"
+
+        depends_on:
+            - backend
+
+        networks:
+            - copilot_public
+            - copilot_private
+    # Backend
+    backend:
+        container_name: copilot-be
+        image: backend-be
+        build:
+            context: ./backend
+            dockerfile: dockerfile
+            args:
+                RUN_ENV: local
+        ports:
+            - "8000:8000"
+        volumes:
+            - "./backend:/copilot/:delegated"
+
+        networks:
+            - copilot_public
+            - copilot_private
+        restart: always     
+
+networks:
+    copilot_public: {}
+    copilot_private:
+        driver: bridge
+        internal: true

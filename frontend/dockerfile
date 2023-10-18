@@ -1,0 +1,14 @@
+FROM node
+
+RUN  echo $RUN_ENV
+
+WORKDIR /copilot
+
+COPY . .
+RUN npm install
+
+
+EXPOSE 3005
+
+
+CMD  [ "npm", "run", "dev"] 
